@@ -1,7 +1,8 @@
 :root {
   --board-dimension: 420px;
   --box-dimension: 120px;
-  --board-border: 5px ridge rgb(36, 196, 108);
+  --board-border: 5px ridge rgb(59, 114, 136);
+  --board-color: #f1e4a6;
 }
 
 *, *:before, *:after {
@@ -18,7 +19,7 @@ main {
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 40px;
-    background-color: antiquewhite;
+    background-color: var(--board-color);
     padding: 40px 0;
     width: var(--board-dimension);
 }
