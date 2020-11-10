@@ -1,0 +1,73 @@
+:root {
+  --board-dimension: 420px;
+  --box-dimension: 120px;
+  --board-border: 5px ridge rgb(36, 196, 108);
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+}
+
+.game-board {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+    background-color: antiquewhite;
+    padding: 40px 0;
+    width: var(--board-dimension);
+}
+
+.board {
+    height: var(--box-dimension);
+    margin: 0 0;
+}
+
+.board-tl {
+    border-right: var(--board-border);
+    border-bottom: var(--board-border);
+     width: var(--box-dimension);
+}
+.board-tm {
+    border-right: var(--board-border);
+    border-bottom: var(--board-border);
+     width: var(--box-dimension);
+}
+
+.board-tr {
+    border-bottom: var(--board-border);
+    width: var(--box-dimension);
+}
+.board-ml {
+    border-right: var(--board-border);
+    border-bottom: var(--board-border);
+     width: var(--box-dimension);
+}
+.board-mm {
+    border-right: var(--board-border);
+    border-bottom: var(--board-border);
+    width: var(--box-dimension);
+}
+
+.board-mr {
+    border-bottom: var(--board-border);
+    width: var(--box-dimension);
+}
+
+.board-bl {
+    border-right: var(--board-border);
+     width: var(--box-dimension);
+}
+.board-bm {
+    border-right: var(--board-border);
+    width: var(--box-dimension);
+}
+
+.board-br {
+    width: var(--box-dimension);
+}
