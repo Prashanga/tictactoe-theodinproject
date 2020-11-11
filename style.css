@@ -3,6 +3,7 @@
   --box-dimension: 120px;
   --board-border: 5px ridge rgb(59, 114, 136);
   --board-color: #f1e4a6;
+  --moves-color: rgb(47, 37, 37);
 }
 
 *, *:before, *:after {
@@ -12,6 +13,30 @@
 main {
     display: flex;
     justify-content: center;
+}
+
+.popup-newgame {
+    position: fixed;
+    background-color: #191d1ad3;
+    height: 100vh;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.popup-newgame:target {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup-content {
+    background-color: blanchedalmond;
+    width: 60%;
+    margin: 100px auto;
+    text-align: left;
+   
 }
 
 .game-board {
@@ -26,7 +51,11 @@ main {
 
 .board {
     height: var(--box-dimension);
-    margin: 0 0;
+    font-size: 2.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--moves-color);
 }
 
 .board-tl {

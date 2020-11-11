@@ -3,16 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Expires" content="-1">
     <link rel="stylesheet" href="style.css">
+    <script>
+        // Force a new request of CSS file
+        document.location.hash = 'new-game'
+
+        let link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'style.css?v=' + Math.random();
+        document.head.appendChild(link);
+    </script>
     <title>Tic tac toe</title>
+    <script>
+
+    </script>
 </head>
 <body>
     <header>
-        <h1>
-            Tic Tac Toe
-        </h1>
+       
     </header>
     <main>
+        <div class="popup-newgame" id="new-game">
+            <form class="popup-content">
+                <h2 class="newgame-h1">Welcome</h2>
+                <h3 class="newgame-h2">Choose a setting</h3>
+                <div>
+                    <p class="newgame-p">No. Players</p>
+                    <input type="radio" id="onePlayer" name="numPlayers" value=1 checked>
+                    <label for="onePlayer">One</label>
+                    <input type="radio" id="twoPlayers" name="numPlayers" value=2>
+                    <label for="twoPlayers">Two</label>
+                </div>
+                <div>
+                    <p class="newgame-p">Difficulty</p>
+                    <input type="radio" id="easyDifficulty" name="difficulty" value="easy" checked>
+                    <label for="easyDifficulty">Easy</label>
+                    <input type="radio" id="hardDifficulty" name="difficulty" value="hard">
+                    <label for="hardDifficulty">Hard</label>
+                </div>
+                <p class="newgame-p">Give a name</p>
+                <div>
+                    <label for="player1name" >Player 1 (optional)</label>
+                    <input type="text" id="player1name" name="player1name" placeholder="Player 1"><br><br>
+                    <label for="player2name">Player 2 (optional)</label>
+                    <input type="text" id="player2name" name="player2name" placeholder="Player 2"><br><br>
+                </div>
+
+                <button type="button" onclick="startGame()">Start Game</button>
+            </form>
+        </div>
+
         <div class="game-board">
             <div id=0 class="board board-tl"></div>
             <div id=1 class="board board-tm"></div>
@@ -27,6 +68,7 @@
             <div id=8 class="board board-br"></div>
         </div>
     </main>
+
 </body>
 <script src="tictactoe.js"></script>
 </html>

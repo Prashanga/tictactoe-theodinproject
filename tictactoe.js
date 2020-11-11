@@ -1,7 +1,8 @@
+let numOfMoves = 0
+let winner = ''
+
 const Player = (name, sign) => {
-
     const moves = [0,0,0,0,0,0,0,0,0]
-
     const getName = () => name
     const getSign = () => sign
     const getMoves = () => moves
@@ -10,23 +11,31 @@ const Player = (name, sign) => {
         moves[pos] = 1
     }
 
-
     return { getName, getSign, getMoves, makeMove }
 }
 
 
 const GameBoard = (() => {
     const gameBoard = [0,0,0,0,0,0,0,0,0]
-    const player1 = Player("Pras", "X")
-    const player2 = Player("AI", "O")
-    let numOfMoves = 0
-    let winner = ''
+    let player1 = null
+    let player2 = null
+    let currentPlayer = null
 
-    if(winner.length > 0 ) return
-
+    //let currentPlayer =  Math.random() < 0.5 ? player1 : player2
+    
+    const addPlayers = (one, two) => {
+        player1 = one
+        player2 = two
+        currentPlayer = Math.random() < 0.5 ? player1 : player2
+    }
+    
     const getCurrentPlayer = () => {
-        if(numOfMoves % 2 === 0 ) return player1
-        else return player2
+        return currentPlayer
+    }
+
+    const changePlayer = () => {
+        if(currentPlayer == player1) currentPlayer = player2
+        else currentPlayer = player1
     }
 
     const checkVictory = (player) => {
@@ -63,27 +72,58 @@ const GameBoard = (() => {
         })
     }
 
-    makeAmove = (value) => {
-        let board = value.target
-        // Do nothing if the board already filled
-        if(gameBoard[board.id] === 1) return
-
-        let currentPlayer = getCurrentPlayer()
-        board.innerHTML = currentPlayer.getSign()
-        currentPlayer.makeMove(board.id)
-        gameBoard[board.id] = 1
-
-        checkVictory(currentPlayer)
-
-        //Last
-        numOfMoves += 1
-    }
-
-    for(let i=0; i<=8; i++) {
-        document
-            .getElementById(i)
-            .addEventListener('click', makeAmove)
+    return {
+        addPlayers,
+        gameBoard,
+        getCurrentPlayer,
+        checkVictory,
+        changePlayer
     }
     
-
 })()
+
+const makeAmove = (value) => {
+    if(winner.length > 0) return
+    if(numOfMoves === 9) console.log("Game Tied")
+
+    let board = value.target
+    // Do nothing if the board already filled
+    if(GameBoard.gameBoard[board.id] === 1) return
+
+    let currentPlayer = GameBoard.getCurrentPlayer()
+    board.innerHTML = currentPlayer.getSign()
+    currentPlayer.makeMove(board.id)
+    GameBoard.gameBoard[board.id] = 1
+
+    GameBoard.checkVictory(currentPlayer)
+
+    GameBoard.changePlayer()
+
+    //Last
+    numOfMoves += 1
+}
+
+const startGame = () => {
+    document.location.hash = 'home'
+    
+    let numPlayers = parseInt(document.querySelector('input[name="numPlayers"]:checked').value)
+    let gameDifficulty = document.querySelector('input[name="difficulty"]:checked').value
+    let playerOneName = document.getElementById('player1name').value || 'Player 1'
+    let playerTwoName = document.getElementById('player2name').value || 'Player 2'
+
+    if(numPlayers === 1 && playerTwoName == 'Player 2') playerTwoName = 'Computer'
+
+    GameBoard.addPlayers(Player(playerOneName, "X"), Player(playerTwoName, "O"))
+    
+
+
+    // Last
+    document.querySelector('form').reset()
+}
+
+for(let i=0; i<=8; i++) {
+    document
+        .getElementById(i)
+        .addEventListener('click', makeAmove)
+}
+
