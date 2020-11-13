@@ -12,7 +12,9 @@
 
 main {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  
 }
 
 .popup-newgame {
@@ -101,3 +103,7 @@ main {
 .board-br {
     width: var(--box-dimension);
 }
+
+.winner-text {
+   height: 30px;
+}   
