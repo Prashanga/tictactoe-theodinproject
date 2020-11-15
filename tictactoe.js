@@ -25,44 +25,63 @@ const GameBoard = (() => {
     let player2 = null
     let currentPlayer = null
     let numPlayers = null
+    // let gameOver = false
 
-    // if(currentPlayer)  document.getElementById('score-text').innerHTML = `${currentPlayer}'s turn`
+    const changeScoreTitle = (text) => {
+        document.getElementById('score-text').innerHTML = text
+    }
 
-    const initialize = (numplayers, playerOneName, playerTwoName) => {
+    const getCurrentPlayer = () => currentPlayer
+    
+    const initialise = (numplayers, playerOneName, playerTwoName) => {
         numPlayers = numplayers
         player1 = Player(playerOneName, "X", 1)
         player2 =  Player(playerTwoName, "O", 2)
         currentPlayer = Math.random() < 0.5 ? player1 : player2
+        changeScoreTitle(`${getCurrentPlayer().getName()}'s turn`)
     }
 
     const getNumPlayers = () => numPlayers
 
-    const checkBoard = (index) => {
-        return gameBoard[index]
+    const checkBoard = (index) => gameBoard[index]
+
+    const gameOver = () => {
+        if(numOfMoves >= 9 || winner.length > 0) return true
+        else return false
     }
-    
+
     const setBoard = (index) => {
         gameBoard[index] = 1
-    }
-    
-    const getCurrentPlayer = () => {
-        return currentPlayer
     }
 
     const changePlayer = () => {
         currentPlayer = currentPlayer == player1 ? player2 : player1
     }
-
+    
     const makePlayerMove = (pos) => {
+
+        if(gameOver()) return
+        numOfMoves += 1
         if(currentPlayer == player1) player1.makeMove(pos)
         else player2.makeMove(pos)
         document.getElementById(pos).innerHTML = currentPlayer.getSign()
         setBoard(pos)
-        checkVictory(currentPlayer) 
-        changePlayer()
+
+        if(checkVictory(currentPlayer))  {
+            winner = currentPlayer.getName()
+            changeScoreTitle(`${currentPlayer.getName()} wins`)
+        }
+        else{
+            changePlayer()
+            changeScoreTitle(`${getCurrentPlayer().getName()}'s turn`)
+            if(numOfMoves === 9) changeScoreTitle("Its a tie")
+        }
+        
     }
 
     const checkVictory = (player) => {
+
+        let win = false
         const victoryMoves = [
             [1,1,1,-1,-1,-1,-1,-1,-1],
             [1,-1,-1,1,-1,-1,1,-1,-1],
@@ -73,7 +92,6 @@ const GameBoard = (() => {
             [-1,-1,-1,1,1,1,-1,-1,-1],
             [-1,-1,-1,-1,-1,-1,1,1,1]
         ]
-
         let playerMoves = player.getMoves()
 
         victoryMoves.forEach( victoryMove => {
@@ -85,15 +103,11 @@ const GameBoard = (() => {
            }, 0)
 
            if( value === 3) {
-            //    changeScoreTitle(`${player.getName()} wins`)
-               winner = player.getName()
-               return
+               win = true
            }
-
-        //    else {
-        //        console.log("Not yet won")
-        //    }
         })
+
+        return win
     }
 
     const resetGameboard = () => {
@@ -101,14 +115,15 @@ const GameBoard = (() => {
         player1.resetMoves()
         player2.resetMoves()
         currentPlayer = Math.random() < 0.5 ? player1 : player2
-
+        changeScoreTitle(`${getCurrentPlayer().getName()}'s turn`)
     }
 
     return {
         checkBoard,
         checkVictory,
         changePlayer,
-        initialize,
+        initialise,
+        gameOver,
         getCurrentPlayer,
         makePlayerMove,
         getNumPlayers,
@@ -118,44 +133,30 @@ const GameBoard = (() => {
     
 })()
 
-const changeScoreTitle = (text) => {
-    document.getElementById('score-text').innerHTML = text
-}
-
 const makePlayermove = (value) => {
-    if(winner.length > 0) return
-    if(numOfMoves === 8){
-       changeScoreTitle("Its a tie")
-    }
-    if(numOfMoves > 8 ) return
-    changeScoreTitle(`${GameBoard.getCurrentPlayer().getName()}'s turn`)
+
     let id = value.target.id
     // Do nothing if the board already filled
     if(GameBoard.checkBoard(id) === 1) return
     GameBoard.makePlayerMove(id)
 
-    numOfMoves += 1
-    if(GameBoard.getNumPlayers() === 1) makeComputerMove()
+    // numOfMoves += 1
+    if(GameBoard.getNumPlayers() === 1 && !GameBoard.gameOver()) makeComputerMove()
 
 }
 
 const makeComputerMove = () => {
-    if(winner.length > 0) return
-      if(numOfMoves === 8){
-       changeScoreTitle("Its a tie")
-    }
-    if(numOfMoves > 8 ) return
-    changeScoreTitle(`${GameBoard.getCurrentPlayer().getName()}'s turn`)
 
     while(true){
         let randomPosition = Math.floor(Math.random() * 9)
         if(GameBoard.checkBoard(randomPosition) === 0) {
-            window.setTimeout(() => GameBoard.makePlayerMove(randomPosition), 800)
-            numOfMoves += 1 
+            window.setTimeout(() => {
+                GameBoard.makePlayerMove(randomPosition)
+            }, 800)
+
             return
         }
     }
-   
 
 }
 
@@ -167,9 +168,11 @@ const startGame = () => {
     let playerOneName = document.getElementById('player1name').value || 'Player 1'
     let playerTwoName = document.getElementById('player2name').value || 'Player 2'
 
-    if(numPlayers === 1 && playerTwoName == 'Player 2') playerTwoName = 'Computer'
+    if(numPlayers === 1 && playerTwoName == 'Player 2') {
+        playerTwoName = 'Computer'
+    }
 
-    GameBoard.initialize(numPlayers, playerOneName, playerTwoName)
+    GameBoard.initialise(numPlayers, playerOneName, playerTwoName)
     
     for(let i=0; i<=8; i++) {
         document
@@ -177,7 +180,7 @@ const startGame = () => {
             .addEventListener('click', makePlayermove)
     }
 
-    if(numPlayers === 1 && GameBoard.getCurrentPlayer().getNumber() == 2) makeComputerMove()
+    if(numPlayers === 1 && GameBoard.getCurrentPlayer().getNumber() == 2)   makeComputerMove()
 
     // Last
     document.querySelector('form').reset()
@@ -187,10 +190,11 @@ const resetGame = () => {
     numOfMoves = 0
     winner = ''
     GameBoard.resetGameboard()
-    
+
     for(let i=0; i<=8; i++) {
         document.getElementById(i).innerHTML = ''
     }
+    if(GameBoard.getNumPlayers() === 1 && GameBoard.getCurrentPlayer().getNumber() == 2)   makeComputerMove()
 }
  
 const restartGame = () => {

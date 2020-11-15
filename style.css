@@ -105,5 +105,5 @@ main {
 }
 
 .winner-text {
-   height: 30px;
+  display: block;
 }   
