@@ -1,10 +1,11 @@
 let numOfMoves = 0
 let winner = ''
 
-const Player = (name, sign) => {
+const Player = (name, sign, number) => {
     let moves = [0,0,0,0,0,0,0,0,0]
     const getName = () => name
     const getSign = () => sign
+    const getNumber = () => number
     const getMoves = () => moves
 
     const makeMove = (pos) => {
@@ -15,15 +16,26 @@ const Player = (name, sign) => {
         moves = [0,0,0,0,0,0,0,0,0]
     }
 
-    return { getName, getSign, getMoves, makeMove, resetMoves }
+    return { getName, getSign, getMoves, makeMove, resetMoves, getNumber }
 }
-
 
 const GameBoard = (() => {
     let gameBoard = [0,0,0,0,0,0,0,0,0]
     let player1 = null
     let player2 = null
     let currentPlayer = null
+    let numPlayers = null
+
+    // if(currentPlayer)  document.getElementById('score-text').innerHTML = `${currentPlayer}'s turn`
+
+    const initialize = (numplayers, playerOneName, playerTwoName) => {
+        numPlayers = numplayers
+        player1 = Player(playerOneName, "X", 1)
+        player2 =  Player(playerTwoName, "O", 2)
+        currentPlayer = Math.random() < 0.5 ? player1 : player2
+    }
+
+    const getNumPlayers = () => numPlayers
 
     const checkBoard = (index) => {
         return gameBoard[index]
@@ -32,12 +44,6 @@ const GameBoard = (() => {
     const setBoard = (index) => {
         gameBoard[index] = 1
     }
-
-    const addPlayers = (one, two) => {
-        player1 = one
-        player2 = two
-        currentPlayer = Math.random() < 0.5 ? player1 : player2
-    }
     
     const getCurrentPlayer = () => {
         return currentPlayer
@@ -45,6 +51,15 @@ const GameBoard = (() => {
 
     const changePlayer = () => {
         currentPlayer = currentPlayer == player1 ? player2 : player1
+    }
+
+    const makePlayerMove = (pos) => {
+        if(currentPlayer == player1) player1.makeMove(pos)
+        else player2.makeMove(pos)
+        document.getElementById(pos).innerHTML = currentPlayer.getSign()
+        setBoard(pos)
+        checkVictory(currentPlayer) 
+        changePlayer()
     }
 
     const checkVictory = (player) => {
@@ -70,64 +85,78 @@ const GameBoard = (() => {
            }, 0)
 
            if( value === 3) {
-               changeWinnerTitle(`${player.getName()} wins`)
+            //    changeScoreTitle(`${player.getName()} wins`)
                winner = player.getName()
                return
            }
 
-           else {
-               console.log("Not yet won")
-           }
+        //    else {
+        //        console.log("Not yet won")
+        //    }
         })
-    }
-
-    const changeWinnerTitle = (text) => {
-        document.getElementById('winner-text').innerHTML = text
     }
 
     const resetGameboard = () => {
         gameBoard = [0,0,0,0,0,0,0,0,0]
         player1.resetMoves()
         player2.resetMoves()
-        changeWinnerTitle('')
+        currentPlayer = Math.random() < 0.5 ? player1 : player2
 
     }
 
     return {
-        addPlayers,
         checkBoard,
-        getCurrentPlayer,
         checkVictory,
         changePlayer,
-        changeWinnerTitle,
+        initialize,
+        getCurrentPlayer,
+        makePlayerMove,
+        getNumPlayers,
         resetGameboard,
         setBoard
     }
     
 })()
 
-const makeAmove = (value) => {
-  
+const changeScoreTitle = (text) => {
+    document.getElementById('score-text').innerHTML = text
+}
+
+const makePlayermove = (value) => {
     if(winner.length > 0) return
     if(numOfMoves === 8){
-       GameBoard.changeWinnerTitle("Its a tie")
+       changeScoreTitle("Its a tie")
     }
     if(numOfMoves > 8 ) return
-   
-    let board = value.target
+    changeScoreTitle(`${GameBoard.getCurrentPlayer().getName()}'s turn`)
+    let id = value.target.id
     // Do nothing if the board already filled
-    if(GameBoard.checkBoard(board.id) === 1) return
-
-    let currentPlayer = GameBoard.getCurrentPlayer()
-    board.innerHTML = currentPlayer.getSign()
-    currentPlayer.makeMove(board.id)
-
-    GameBoard.setBoard(board.id)
-    GameBoard.checkVictory(currentPlayer)
-    GameBoard.changePlayer()
+    if(GameBoard.checkBoard(id) === 1) return
+    GameBoard.makePlayerMove(id)
 
     numOfMoves += 1
-    
+    if(GameBoard.getNumPlayers() === 1) makeComputerMove()
+
+}
+
+const makeComputerMove = () => {
+    if(winner.length > 0) return
+      if(numOfMoves === 8){
+       changeScoreTitle("Its a tie")
+    }
+    if(numOfMoves > 8 ) return
+    changeScoreTitle(`${GameBoard.getCurrentPlayer().getName()}'s turn`)
+
+    while(true){
+        let randomPosition = Math.floor(Math.random() * 9)
+        if(GameBoard.checkBoard(randomPosition) === 0) {
+            window.setTimeout(() => GameBoard.makePlayerMove(randomPosition), 800)
+            numOfMoves += 1 
+            return
+        }
+    }
+   
+
 }
 
 const startGame = () => {
@@ -140,13 +169,16 @@ const startGame = () => {
 
     if(numPlayers === 1 && playerTwoName == 'Player 2') playerTwoName = 'Computer'
 
-    GameBoard.addPlayers(Player(playerOneName, "X"), Player(playerTwoName, "O"))
+    GameBoard.initialize(numPlayers, playerOneName, playerTwoName)
     
     for(let i=0; i<=8; i++) {
         document
             .getElementById(i)
-            .addEventListener('click', makeAmove)
+            .addEventListener('click', makePlayermove)
     }
+
+    if(numPlayers === 1 && GameBoard.getCurrentPlayer().getNumber() == 2) makeComputerMove()
+
     // Last
     document.querySelector('form').reset()
 }
@@ -160,6 +192,7 @@ const resetGame = () => {
         document.getElementById(i).innerHTML = ''
     }
 }
+ 
 const restartGame = () => {
     resetGame()
     document.location.hash = 'new-game'
