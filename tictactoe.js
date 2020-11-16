@@ -67,12 +67,12 @@ const GameBoard = (() => {
 
         if(checkVictory(currentPlayer))  {
             winner = currentPlayer.getName()
-            changeScoreTitle(`${currentPlayer.getName()} wins`)
+            changeScoreTitle(`${currentPlayer.getName()} wins!!`)
         }
         else{
             changePlayer()
             changeScoreTitle(`${getCurrentPlayer().getName()}'s turn`)
-            if(numOfMoves === 9) changeScoreTitle("Its a tie")
+            if(numOfMoves === 9) changeScoreTitle("Its a tie!!")
         }
         
     }
@@ -139,8 +139,6 @@ const makePlayermove = (value) => {
     // Do nothing if the board already filled
     if(GameBoard.checkBoard(id) === 1) return
     GameBoard.makePlayerMove(id)
-
-    // numOfMoves += 1
     if(GameBoard.getNumPlayers() === 1 && !GameBoard.gameOver()) makeComputerMove()
 
 }
