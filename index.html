@@ -26,17 +26,17 @@
     <main>
         <div class="popup-newgame" id="new-game">
             <form class="popup-content">
-                <h2 class="newgame-h1">Welcome</h2>
-                <h3 class="newgame-h2">Choose a setting</h3>
+               
+                <h3 class="newgame-h2">Welcome, choose settings</h3>
                 <div>
-                    <p class="newgame-p">Number of Players</p>
+                    <p class="newgame-p">Number of Players:     </p>
                     <input type="radio" id="onePlayer" name="numPlayers" value=1 checked>
                     <label for="onePlayer">One</label>
                     <input type="radio" id="twoPlayers" name="numPlayers" value=2>
                     <label for="twoPlayers">Two</label>
                 </div>
                 <div>
-                    <p class="newgame-p">Difficulty</p>
+                    <p class="newgame-p">Difficulty:        </p>
                     <input type="radio" id="easyDifficulty" name="difficulty" value="easy" checked>
                     <label for="easyDifficulty">Easy</label>
                     <input type="radio" id="hardDifficulty" name="difficulty" value="hard">
@@ -50,33 +50,35 @@
                     <input type="text" id="player2name" name="player2name" placeholder="Player 2"><br><br>
                 </div>
 
-                <button type="button" onclick="startGame()">Start Game</button>
+                <button type="button" class="newgame-start-button" onclick="startGame()">Start Game</button>
             </form>
         </div>
 
        
-        
-        <div class="game-board" id="game-board">
-           
-            <div id=0 class="board board-tl"></div>
-            <div id=1 class="board board-tm"></div>
-            <div id=2 class="board board-tr"></div>
+        <div class="game-content">
 
-            <div id=3 class="board board-ml"></div>
-            <div id=4 class="board board-mm"></div>
-            <div id=5 class="board board-mr"></div>
-            
-            <div id=6 class="board board-bl"></div>
-            <div id=7 class="board board-bm"></div>
-            <div id=8 class="board board-br"></div>
-
-            <p class="title-text" id="score-text"></p>
+            <div class="game-board" id="game-board">
+                
+                <div id=0 class="board board-tl"></div>
+                <div id=1 class="board board-tm"></div>
+                <div id=2 class="board board-tr"></div>
+                
+                <div id=3 class="board board-ml"></div>
+                <div id=4 class="board board-mm"></div>
+                <div id=5 class="board board-mr"></div>
+                
+                <div id=6 class="board board-bl"></div>
+                <div id=7 class="board board-bm"></div>
+                <div id=8 class="board board-br"></div>
+                
+                <p class="score-text" id="score-text"></p>
+                
+            </div>
         </div>
-
-        <button type="button" class="restart" onclick="resetGame()">Reset Game</button>
-
-        <button type="button" class="restart" onclick="restartGame()">Restart</button>
-    </main>
+            <button type="button" class="reset-button" onclick="resetGame()">Reset</button>
+            
+            <button type="button" class="restart-button" onclick="restartGame()">Restart</button>
+        </main>
 
 </body>
 <script src="tictactoe.js"></script>

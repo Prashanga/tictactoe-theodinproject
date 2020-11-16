@@ -10,11 +10,8 @@
   box-sizing: border-box;
 }
 
-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  
+main {   
+   text-align: center;
 }
 
 .popup-newgame {
@@ -34,11 +31,64 @@ main {
 }
 
 .popup-content {
-    background-color: blanchedalmond;
+    background-color: var(--board-color);
     width: 60%;
     margin: 100px auto;
-    text-align: left;
-   
+    text-align: center;
+    font-size: 1.3rem;
+    padding: 5px 0;
+}
+
+.newgame-h2{
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.newgame-p {
+    display: inline-block;
+    font-size: 1.5rem;
+}
+
+.newgame-start-button, .reset-button, .restart-button {
+    padding: 10px 15px;
+    font-size: 1.1rem;
+    background-color:rgb(59, 114, 136);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 1px 1px 8px 0px var(--moves-color);
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.1s ease-in;
+    display: inline-block;
+}
+
+.newgame-start-button:active {
+    transform: scale(1.1);
+}
+
+.reset-button {
+    background-color: #805290;
+}
+
+.reset-button:hover {
+    background-color: #6a2681;
+}
+
+.restart-button:hover {
+    background-color: rgb(19, 95, 126);
+}
+
+.reset-button, .restart-button {
+    margin-top: 15px;
+    margin-right: 20px;
+}
+
+.game-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
 }
 
 .game-board {
@@ -47,7 +97,7 @@ main {
     flex-wrap: wrap;
     margin-top: 40px;
     background-color: var(--board-color);
-    padding: 40px 0;
+    padding-top: 40px;
     width: var(--board-dimension);
 }
 
@@ -104,6 +154,9 @@ main {
     width: var(--box-dimension);
 }
 
-.winner-text {
-  display: block;
+.score-text {
+  width: 100%;
+  text-align: center;
+  font-size: 1.3rem;
+  margin-top:20px;
 }   

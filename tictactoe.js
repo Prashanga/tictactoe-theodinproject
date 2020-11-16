@@ -1,6 +1,3 @@
-let numOfMoves = 0
-let winner = ''
-
 const Player = (name, sign, number) => {
     let moves = [0,0,0,0,0,0,0,0,0]
     const getName = () => name
@@ -25,7 +22,8 @@ const GameBoard = (() => {
     let player2 = null
     let currentPlayer = null
     let numPlayers = null
-    // let gameOver = false
+    let numOfMoves = 0
+    let winner = ''
 
     const changeScoreTitle = (text) => {
         document.getElementById('score-text').innerHTML = text
@@ -114,6 +112,8 @@ const GameBoard = (() => {
         gameBoard = [0,0,0,0,0,0,0,0,0]
         player1.resetMoves()
         player2.resetMoves()
+        numOfMoves = 0
+        winner = ''
         currentPlayer = Math.random() < 0.5 ? player1 : player2
         changeScoreTitle(`${getCurrentPlayer().getName()}'s turn`)
     }
@@ -176,25 +176,23 @@ const startGame = () => {
     
     for(let i=0; i<=8; i++) {
         document
-            .getElementById(i)
-            .addEventListener('click', makePlayermove)
+          .getElementById(i)
+          .addEventListener('click', makePlayermove)
     }
 
-    if(numPlayers === 1 && GameBoard.getCurrentPlayer().getNumber() == 2)   makeComputerMove()
+    if(numPlayers === 1 && GameBoard.getCurrentPlayer().getNumber() === 2)   makeComputerMove()
 
     // Last
     document.querySelector('form').reset()
 }
 
 const resetGame = () => {
-    numOfMoves = 0
-    winner = ''
     GameBoard.resetGameboard()
 
     for(let i=0; i<=8; i++) {
         document.getElementById(i).innerHTML = ''
     }
-    if(GameBoard.getNumPlayers() === 1 && GameBoard.getCurrentPlayer().getNumber() == 2)   makeComputerMove()
+    if(GameBoard.getNumPlayers() === 1 && GameBoard.getCurrentPlayer().getNumber() === 2)   makeComputerMove()
 }
  
 const restartGame = () => {
